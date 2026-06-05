@@ -194,16 +194,52 @@
   }
   .viewer-title { color: var(--muted); font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; }
   #siteFrame {
-    width: 100%; height: 100vh;
-    border: 0; display: block;
-    padding-top: 58px;
+    width: 100%;
+    height: calc(100vh - 58px);
+    border: 0;
+    display: block;
+    margin-top: 58px;
     background: white;
   }
+
+  @media (max-width: 1200px) {
+    .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
   @media (max-width: 900px) {
+    body { overflow-x: hidden; }
+    #lockscreen { align-items: start; overflow-y: auto; padding: 24px 18px; }
+    .lock-card { padding: 32px 22px; margin: auto 0; }
     .cards { grid-template-columns: 1fr; }
     .site-card { min-height: 210px; }
-    .lock-card { padding: 32px 22px; }
     .viewer-title { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    #lockscreen { padding: 18px 14px; }
+    .lock-card { width: 100%; padding: 28px 18px; }
+    .lock-title { font-size: clamp(2.15rem, 13vw, 3.1rem); }
+    .lock-text { margin-bottom: 22px; }
+    .lock-input, .unlock-btn, .request-pass-btn { min-height: 52px; font-size: .86rem; }
+    .toggle-pass { font-size: .7rem; right: 10px; }
+    .home { min-height: 100svh; padding: 56px 18px; justify-content: flex-start; }
+    .home-top { margin-bottom: 32px; }
+    .home-kicker { font-size: .64rem; letter-spacing: .18em; }
+    .home-title { font-size: clamp(2.5rem, 14vw, 4.4rem); }
+    .home-sub { font-size: .92rem; line-height: 1.65; }
+    .site-card { min-height: 190px; padding: 22px; }
+    .site-title { font-size: clamp(2rem, 11vw, 2.8rem); }
+    .site-sub { font-size: .86rem; }
+    .viewer-bar { height: 64px; padding: 0 12px; gap: 8px; }
+    .back-btn, .logout-btn { padding: 10px 11px; font-size: .68rem; letter-spacing: .09em; }
+    #siteFrame { height: calc(100svh - 64px); margin-top: 64px; }
+  }
+
+  @media (max-width: 380px) {
+    .lock-card { padding: 24px 14px; }
+    .lock-input { padding-right: 44px; }
+    .site-card { padding: 18px; }
+    .back-btn, .logout-btn { font-size: .62rem; padding: 9px 8px; }
   }
 </style>
 </head>
@@ -221,7 +257,7 @@
         <button type="button" class="toggle-pass" id="togglePass">Zeigen</button>
       </div>
       <button class="unlock-btn" type="submit">Entsperren</button>
-      <a class="request-pass-btn" href="https://www.instagram.com/direct/t/116108706450822" target="_blank" rel="noopener noreferrer">Passwort anfragen</a>
+      <a class="request-pass-btn" id="requestPassBtn" href="https://ig.me/m/hermpn?text=Ich%20m%C3%B6chte%20Zugriff" target="_blank" rel="noopener noreferrer" aria-label="Passwort per Instagram Direct Message bei hermpn anfragen">Passwort anfragen</a>
       <div class="lock-error" id="lockError" role="alert"></div>
     </form>
   </div>
@@ -353,6 +389,16 @@
 
   backBtn.addEventListener('click', showHome);
   logoutBtn.addEventListener('click', lock);
+
+  const requestPassBtn = document.getElementById('requestPassBtn');
+  if (requestPassBtn) {
+    requestPassBtn.addEventListener('click', () => {
+      const requestText = 'Ich möchte Zugriff';
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(requestText).catch(() => {});
+      }
+    });
+  }
 
   renderCards();
 })();

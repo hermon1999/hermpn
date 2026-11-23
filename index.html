@@ -1016,7 +1016,7 @@ body.unlocked #lockscreen{display:none;}
 
 <script>
 // ── PASSWORD ──
-const HASH='0917e6e95cb024b61ed61c9976e248a69aa9e638064aa40718412ed31e60a6b8';
+const HASH='b2947e9a7085c1f473eb2241a7f2fa03e85acbd34de00064247bfe90437807e3';
 async function sha256(m){const e=new TextEncoder(),b=e.encode(m),h=await crypto.subtle.digest('SHA-256',b),a=Array.from(new Uint8Array(h));return a.map(x=>x.toString(16).padStart(2,'0')).join('');}
 
 
